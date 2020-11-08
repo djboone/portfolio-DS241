@@ -1,0 +1,75 @@
+Title-Data Visualisation-DS241
+Author-Demetrius Boone
+
+Before you begin there are a few cruical steps that you must do, You need
+to ensure that you are able to use the needed functions to create certain
+visualisations (scatterplot, histogram, barchart, lineplot).
+
+First installing and applying the packages associated by using:
+```{r}
+library(tidyverse)
+library(readxl)
+library(plotly)
+library(janitor)
+library(readxl)
+library(skimr)
+library(summarytools)
+```
+  
+Next step is to obtain a data set and prepare it for use, for this case a sample
+data set will be used from R but any data set will work, you can choose any data
+from the list you generate but running the following code:
+
+```{r}
+data()
+```
+
+### Choosing the data
+
+For this example however i will be using data from the world bank and showing population data
+(found here https://data.worldbank.org/indicator/SP.POP.TOTL?locations=AF):
+
+```{r}
+dfa = read_excel("~/Rstudio work/Population.xlsx") %>% clean_names() 
+```
+
+
+```{r}
+skim(dfa)
+```
+### Visualzing the data
+
+Next you cant show all 264 countrys at once and it be somewhat pleasing this is where
+random sliceing comes from and helps show data to a smaller degree:
+
+```{r}
+dfa1=dfa %>% slice_sample(n=10)
+```
+
+Then you can form a proper graph using the sliced data to show a population of
+whatever year you want to find:
+```{r}
+ggplot(data = dfa1, aes(x = country_code, y = x1962)) + geom_point()
+```
+### Editing the Data Frame
+
+Pivot longer allows you to join data properly if you have a list of data that 
+needs to go from being rows to its own col:
+```{r}
+dfa2=pivot_longer(dfa1, starts_with("x"), names_to = "year")
+```
+
+After you must rename the new col so someone who looks at the new list will 
+understand:
+```{r}
+dfa3= rename(dfa2,"population " ="value")
+```
+
+Now you can break up each dataset into its proper country that you would want to analyze:
+```{r}
+dfa4= filter(dfa3, country_code== "IMN")
+```
+
+
+
+

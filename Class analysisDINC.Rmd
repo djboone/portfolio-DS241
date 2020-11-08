@@ -1,0 +1,53 @@
+---
+title: "Class enrollment Data: MA132"
+author: "Demetrius Boone"
+date: "21 Sep 2020"
+output: html_notebook
+---
+
+Prepare workspace:
+
+## Load packages
+
+```{r}
+library(tidyverse)
+library(janitor)
+library(readxl)
+library(skimr)
+library(summarytools)
+```
+
+## Read and Clean the data
+
+```{r}
+dfa= read_excel("CU_ACAD_DEPT_ENRL.xlsx") %>% clean_names()
+```
+
+```{r}
+skim(dfa)
+```
+## Tidy Data
+Seperate col term2 into two variables
+
+```{r}
+dfb =dfa %>% separate(col=term2,into=c("semester","year"), sep="")
+```
+### Clean and subset the data
+
+We get rid of the following variables 
+
+* acad_org
+* current status
+* instructor
+* course_id
+
+```{r}
+dfc=dfb %>% select(-acad_org,-current_status,-instructor,-course_id)
+```
+
+
+```{r message=FALSE, warning=FALSE, results='asis'}
+print(dfSummary(dfa, graph.magnif = 0.75), method = 'render')
+```
+
+
